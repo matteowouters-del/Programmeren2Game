@@ -1,4 +1,6 @@
-﻿namespace ProjectGame2526;
+﻿using System.Diagnostics;
+
+namespace ProjectGame2526;
 
 class Program
 {
@@ -25,6 +27,9 @@ class Program
         Console.ForegroundColor = ConsoleColor.Gray;
         Console.Clear();*/
 
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         Reset(game);
 
         game.DrawPlayer();
@@ -33,8 +38,13 @@ class Program
 
         while (true)
         {
-            game.MovePlayer();
-            game.MoveEnemy();
+            double dt = stopwatch.Elapsed.TotalSeconds;
+            game.Update(dt);
+            bool playerMoved = game.MovePlayer();
+            if (playerMoved)
+            {
+              game.MoveEnemy(dt);  
+            }
             Thread.Sleep(1000 / refreshRate);
 
             Reset(game);

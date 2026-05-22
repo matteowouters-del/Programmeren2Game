@@ -2,81 +2,113 @@ using System;
 
 namespace ProjectGame2526;
 
-public enum TyleType
+public enum TileType
 {
-    Empty,
-    Wall,
-    Exit,
-    EnemySpawn,
-    PlayerSpawn,
-    Collectible
+    Empty = 0,
+    Wall = 1,
+    Exit = 2,
+    EnemySpawn = 3,
+    PlayerSpawn = 4,
+    Collectible = 5
 }
 public class Maze
 {
     protected int[,] grid;
+    protected int[] playerSpawn = new int[2];
+    protected int[] enemySpawn = new int[2];
+    protected const int mazeWidth = 25;
+    protected const int mazeHeight = 25;
     public int[,] Grid
     {
         get { return grid; }
         set { grid = value; }
     }
+    public int[] PlayerSpawn
+    {
+        get { return playerSpawn; }
+        set { playerSpawn = value; }
+    }
+    public int[] EnemySpawn
+    {
+        get { return enemySpawn; }
+        set { enemySpawn = value; }
+    }
     public Maze()
     {
-        Grid = new int[25, 25]{
-        {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,2},
-        {1,4,1,0,1,0,0,0,1,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,2},
-        {1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,2},
-        {1,0,0,0,1,5,1,0,0,5,1,0,1,0,1,5,1,0,0,0,5,0,1,0,2},
-        {1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,2},
-        {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,1,0,0,0,0,0,2},
-        {1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,1,1,1,0,2},
-        {1,0,1,0,0,0,0,0,0,5,1,0,0,0,1,0,5,0,1,0,0,0,1,0,2},
-        {1,1,1,5,1,1,1,0,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,0,2},
-        {1,0,1,0,1,0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,0,0,0,2},
-        {1,0,1,0,1,0,1,0,1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,2},
-        {1,0,0,0,1,0,1,5,0,0,1,0,0,5,1,0,0,0,1,0,0,5,1,0,2},
-        {1,5,1,1,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1,1,0,1,1,2},
-        {1,0,0,0,0,0,0,0,1,0,1,0,0,0,1,0,0,0,1,5,0,0,0,0,2},
-        {1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,2},
-        {1,5,0,0,1,3,0,0,0,0,1,0,0,0,1,0,0,0,1,0,5,0,0,0,2},
-        {1,1,1,0,1,0,1,0,1,1,1,1,1,0,1,1,1,0,1,1,1,1,1,0,2},
-        {1,0,0,0,0,0,1,0,0,0,1,0,0,0,0,5,0,0,1,0,0,0,0,0,2},
-        {1,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,0,1,0,1,1,1,1,2},
-        {1,0,0,0,0,5,1,0,1,0,1,5,0,0,1,0,0,0,1,0,0,0,1,0,2},
-        {1,1,1,0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,1,0,1,0,1,0,2},
-        {1,0,0,0,1,0,1,5,0,0,1,0,0,0,1,0,1,0,0,0,1,5,0,0,2},
-        {1,0,1,1,1,0,1,1,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,0,2},
-        {1,0,0,0,1,0,1,0,0,5,0,0,0,0,0,0,0,0,1,0,0,0,1,0,2},
-        {2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2}};
+        Grid = new int[mazeWidth, mazeHeight];
+    }
+    public void ChooseRandomMaze()
+    {
+        string path = "Mazes"; //Name of folder with text files containing mazes
+        string[] fileNames = Directory.GetFiles(path); // create array of filenames
+        
+        Random rndGen = new Random();
+        string chosenMaze = fileNames[rndGen.Next(0,fileNames.Length)]; //randomly select maze file
+
+        LoadMazeFromFile(chosenMaze);
+    }
+    public void LoadMazeFromFile(string mazePath)
+    {
+        StreamReader reader = null;
+        try
+        {
+            reader = new StreamReader(mazePath);
+
+        for(int row = 0; row<mazeHeight; row++)
+        {
+            string line = reader.ReadLine(); // stores a line from the .txt file into a string
+            
+            string[] values = line.Split(','); //splits string containing one line from text file into separate strings for each character after a ','
+
+            for(int col = 0; col<mazeWidth; col++)
+            {
+                int.TryParse(values[col], out Grid[row, col]); // converts each separate character (in a string) to int and puts it into the grid (=int[])
+            }
+        }
+        }
+        catch(Exception e)
+        {
+            Console.WriteLine(e);
+        }
+        finally
+        {
+            reader.Close();
+        }
+        
     }
     public void Draw()
     {
-        for (int col = 0; col < Grid.GetLength(0); col++)
+        for (int row = 0; row < Grid.GetLength(0); row++)
         {
-            for (int row = 0; row < Grid.GetLength(1); row++)
+            for (int col = 0; col < Grid.GetLength(1); col++)
             {
-                switch ((TyleType)Grid[col, row])
+                switch ((TileType)Grid[row, col])
                 {
-                    case TyleType.Empty:
+                    case TileType.Empty:
                         Console.ForegroundColor = ConsoleColor.Black;
                         Console.Write(' ');
                         break;
-                    case TyleType.Wall:
+                    case TileType.Wall:
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write('#');
                         break;
-                    case TyleType.Exit:
+                    case TileType.Exit:
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.Write('X');
                         break;
-                    case TyleType.PlayerSpawn:
+                    case TileType.PlayerSpawn:
                         Console.ForegroundColor = ConsoleColor.Black;
                         Console.Write(' ');
+                        PlayerSpawn[0] = col; //save the x location of the playerspawn
+                        PlayerSpawn[1] = row; // ""      y ""    ""      ""      ""
                         break;
-                    case TyleType.EnemySpawn:
+                    case TileType.EnemySpawn:
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(' ');
+                        EnemySpawn[0] = col;
+                        EnemySpawn[1] = row;
                         break;
-                    case TyleType.Collectible:
+                    case TileType.Collectible:
                         Console.ForegroundColor = ConsoleColor.Magenta;
                         Console.Write('.');
                         break;
@@ -88,7 +120,7 @@ public class Maze
     public bool CheckWall(int[,] map, int x, int y)
     {
         bool result;
-        if ((TyleType)map[x, y] == TyleType.Wall)
+        if ((TileType)map[y, x] == TileType.Wall || (TileType)map[y, x] == TileType.Exit)
         {
             result = true;
         }

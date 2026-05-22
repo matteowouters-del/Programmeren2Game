@@ -5,30 +5,22 @@ namespace ProjectGame2526;
 
 public class Enemy:MovingSprite
 {
-public Enemy(int xSpeed, int ySpeed, int x, int y, char symbol,ConsoleColor color) : base(xSpeed, ySpeed, x, y, symbol, color)
+    protected Random rndGen = new Random();
+public Enemy(int speed, int x, int y, char symbol,ConsoleColor color) : base(speed, x, y, symbol, color)
     {
         
     }
-    public override void Update(float dt)
+    public override void Update(double dt, int[,] maze)
     {
-        Random rndGen = new Random();
-        int random = rndGen.Next(0,4);
-        switch (random)
+        
+        for(int i = 0; i<speed; i++)
         {
-            case 0:
-            PosX+=XSpeed;
-            break;
-            case 1:
-            PosX-=XSpeed;
-            break;
-            case 2:
-            PosY+=YSpeed;
-            break;
-            case 3:
-            PosY-=YSpeed;
-            break;
-            default:
-            break;
+            bool moved = false;
+            while (!moved)
+            {
+                int direction = rndGen.Next(0,4);
+                moved = Move(direction, maze);
+            }
         }
     }
 }

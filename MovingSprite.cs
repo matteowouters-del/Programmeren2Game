@@ -6,26 +6,20 @@ namespace ProjectGame2526;
 
 public class MovingSprite : Sprite
 {
-    protected float xSpeed;
-    protected float ySpeed;
-    public float YSpeed
+    protected float speed;
+
+    public float Speed
     {
-        get{return ySpeed;}
-        set{ySpeed = value;}
+        get{return speed;}
+        set{speed = value;}
     }
-    public float XSpeed
+
+    public MovingSprite(int speed, int x,int y,char symbol, ConsoleColor color):base(x,y,symbol,color)
     {
-        get{return xSpeed;}
-        set{xSpeed = value;}
+        Speed = speed;
     }
-    public MovingSprite(int newXSpeed, int newYSpeed, int x,int y,char symbol, ConsoleColor color):base(x,y,symbol,color)
+    public override void Update(double dt, int[,] maze)
     {
-        XSpeed = newXSpeed;
-        YSpeed = newYSpeed;
-    }
-    public override void Update(float dt)
-    {
-        PosX+=XSpeed;
-        PosY+=YSpeed;
+        
     }
 }
