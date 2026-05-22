@@ -6,22 +6,36 @@ namespace ProjectGame2526;
 class Game
 {
     protected Stopwatch stopwatch;
-    Maze maze = new Maze();
+    protected Maze maze;
     protected Player player;
     protected Enemy enemy;
+    protected UI uI;
+    protected UIElement uITimer, uIScore, uIDifficulty;
+    protected int uIOffsetX = 3;
+    protected int uIOffsetY = 5;
     //protected int width, height;
     //protected int playerPosX = 5, playerPosY = 5;
 
     public Game(/*int newWidth, int newHeight*/)
     {
+        maze = new Maze();
         maze.ChooseRandomMaze();
-        maze.Draw();
+        maze.Draw(uIOffsetX,uIOffsetY);
 
-        player = new Player(maze.PlayerSpawn[0],maze.PlayerSpawn[1],'@',ConsoleColor.Yellow);
-        enemy = new Enemy(1,maze.EnemySpawn[0],maze.EnemySpawn[1],'E',ConsoleColor.Red);
+        player = new Player(maze.PlayerSpawn[0],maze.PlayerSpawn[1],'@',ConsoleColor.Yellow, uIOffsetX, uIOffsetY);
+        enemy = new Enemy(1,maze.EnemySpawn[0],maze.EnemySpawn[1],'E',ConsoleColor.Red, uIOffsetX, uIOffsetY);
+        
 
         stopwatch = new Stopwatch();
         stopwatch.Start();
+
+        uI = new UI();
+        uITimer = new UIElement("Time",0,5,1);
+        uIScore = new UIElement("Score",3000,15,1);
+        uIDifficulty = new UIElement("Difficulty",1,30,1);
+        uI.Add(uITimer);
+        uI.Add(uIScore);
+        uI.Add(uIDifficulty);
 
         /*
         // set the size
@@ -35,11 +49,13 @@ class Game
     }
     public void DrawMaze()
     {
-        maze.Draw();
+        maze.Draw(uIOffsetX,uIOffsetY);
     }
-    public void DrawPlayer()
+    public void Draw()
     {
         player.Draw();
+        enemy.Draw();
+        uI.Draw();
     }
     public bool MovePlayer()
     {
@@ -72,10 +88,6 @@ class Game
     public void Update(double dt)
     {
         
-    }
-    public void DrawEnemy()
-    {
-        enemy.Draw();
     }
     public void MoveEnemy(double dt)
     {

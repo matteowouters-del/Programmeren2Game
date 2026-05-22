@@ -32,8 +32,7 @@ class Program
 
         Reset(game);
 
-        game.DrawPlayer();
-        game.DrawEnemy();
+        game.Draw();
         Console.SetCursorPosition(0, 0);
 
         while (true)
@@ -48,8 +47,7 @@ class Program
             Thread.Sleep(1000 / refreshRate);
 
             Reset(game);
-            game.DrawPlayer();
-            game.DrawEnemy();
+            game.Draw();
         }
     }
 
