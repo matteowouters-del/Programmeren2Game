@@ -8,6 +8,8 @@ public class Sprite
     protected float posY;
     protected char symbol;
     protected ConsoleColor color;
+    protected int offsetX;
+    protected int offsetY;
     public float PosX
     {
         get { return posX; }
@@ -28,16 +30,28 @@ public class Sprite
         get { return color; }
         set { color = value; }
     }
-    public Sprite(int newPosX, int newPosY, char newSymbol, ConsoleColor newColor)
+    public int OffsetX
+    {
+        get{return offsetX;}
+        set{offsetX = value;}
+    }
+    public int OffsetY
+    {
+        get{return offsetY;}
+        set{offsetY = value;}
+    }
+    public Sprite(int newPosX, int newPosY, char newSymbol, ConsoleColor newColor, int newOffsetX, int newOffsetY)
     {
         PosX = newPosX;
         PosY = newPosY;
         Symbol = newSymbol;
         Color = newColor;
+        OffsetX = newOffsetX;
+        OffsetY = newOffsetY;
     }
     public void Draw()
         {
-            Console.SetCursorPosition((int)posX, (int)posY);
+            Console.SetCursorPosition((int)posX+OffsetX, (int)posY+OffsetY);
             Console.ForegroundColor = Color;
             Console.Write(Symbol);
         }

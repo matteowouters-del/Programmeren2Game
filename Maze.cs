@@ -41,32 +41,32 @@ public class Maze
     {
         string path = "Mazes"; //Name of folder with text files containing mazes
         string[] fileNames = Directory.GetFiles(path); // create array of filenames
-        
+
         Random rndGen = new Random();
-        string chosenMaze = fileNames[rndGen.Next(0,fileNames.Length)]; //randomly select maze file
+        string chosenMaze = fileNames[rndGen.Next(0, fileNames.Length)]; //randomly select maze file
 
         LoadMazeFromFile(chosenMaze);
     }
     public void LoadMazeFromFile(string mazePath)
     {
-        StreamReader reader = null;
+        StreamReader reader = new StreamReader(mazePath);
         try
         {
             reader = new StreamReader(mazePath);
 
-        for(int row = 0; row<mazeHeight; row++)
-        {
-            string line = reader.ReadLine(); // stores a line from the .txt file into a string
-            
-            string[] values = line.Split(','); //splits string containing one line from text file into separate strings for each character after a ','
-
-            for(int col = 0; col<mazeWidth; col++)
+            for (int row = 0; row < mazeHeight; row++)
             {
-                int.TryParse(values[col], out Grid[row, col]); // converts each separate character (in a string) to int and puts it into the grid (=int[])
+                string line = reader.ReadLine(); // stores a line from the .txt file into a string
+
+                string[] values = line.Split(','); //splits string containing one line from text file into separate strings for each character after a ','
+
+                for (int col = 0; col < mazeWidth; col++)
+                {
+                    int.TryParse(values[col], out Grid[row, col]); // converts each separate character (in a string) to int and puts it into the grid (=int[])
+                }
             }
         }
-        }
-        catch(Exception e)
+        catch (Exception e)
         {
             Console.WriteLine(e);
         }
@@ -74,9 +74,9 @@ public class Maze
         {
             reader.Close();
         }
-        
+
     }
-    public void Draw()
+    public void Draw(int offsetX, int offsetY)
     {
         for (int row = 0; row < Grid.GetLength(0); row++)
         {
@@ -85,30 +85,36 @@ public class Maze
                 switch ((TileType)Grid[row, col])
                 {
                     case TileType.Empty:
+                        Console.SetCursorPosition(col + offsetX, row + offsetY);
                         Console.ForegroundColor = ConsoleColor.Black;
                         Console.Write(' ');
                         break;
                     case TileType.Wall:
+                        Console.SetCursorPosition(col + offsetX, row + offsetY);
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.Write('#');
                         break;
                     case TileType.Exit:
+                        Console.SetCursorPosition(col + offsetX, row + offsetY);
                         Console.ForegroundColor = ConsoleColor.Blue;
                         Console.Write('X');
                         break;
                     case TileType.PlayerSpawn:
+                        Console.SetCursorPosition(col + offsetX, row + offsetY);
                         Console.ForegroundColor = ConsoleColor.Black;
                         Console.Write(' ');
                         PlayerSpawn[0] = col; //save the x location of the playerspawn
                         PlayerSpawn[1] = row; // ""      y ""    ""      ""      ""
                         break;
                     case TileType.EnemySpawn:
+                        Console.SetCursorPosition(col + offsetX, row + offsetY);
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(' ');
                         EnemySpawn[0] = col;
                         EnemySpawn[1] = row;
                         break;
                     case TileType.Collectible:
+                        Console.SetCursorPosition(col + offsetX, row + offsetY);
                         Console.ForegroundColor = ConsoleColor.Magenta;
                         Console.Write('.');
                         break;
@@ -117,10 +123,10 @@ public class Maze
             Console.WriteLine();
         }
     }
-    public bool CheckWall(int[,] map, int x, int y)
+    public bool CheckWall(int[,] map, int x, int y, int offsetX, int offsetY)
     {
         bool result;
-        if ((TileType)map[y, x] == TileType.Wall || (TileType)map[y, x] == TileType.Exit)
+        if ((TileType)map[y + offsetY, x + offsetX] == TileType.Wall || (TileType)map[y + offsetY, x + offsetX] == TileType.Exit)
         {
             result = true;
         }

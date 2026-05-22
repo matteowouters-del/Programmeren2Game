@@ -6,7 +6,7 @@ namespace ProjectGame2526;
 public class Enemy:MovingSprite
 {
     protected Random rndGen = new Random();
-public Enemy(int speed, int x, int y, char symbol,ConsoleColor color) : base(speed, x, y, symbol, color)
+public Enemy(int speed, int x, int y, char symbol,ConsoleColor color, int offsetX, int offsetY) : base(speed, x, y, symbol, color, offsetX, offsetY)
     {
         
     }
