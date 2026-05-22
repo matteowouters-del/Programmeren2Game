@@ -31,7 +31,7 @@ public class Sprite
     public Sprite(int newPosX, int newPosY, char newSymbol, ConsoleColor newColor)
     {
         PosX = newPosX;
-        posY = newPosY;
+        PosY = newPosY;
         Symbol = newSymbol;
         Color = newColor;
     }
@@ -41,39 +41,45 @@ public class Sprite
             Console.ForegroundColor = Color;
             Console.Write(Symbol);
         }
-    public void Move(int move, int [,] maze)
+    public bool Move(int direction, int [,] maze)
     {
-        switch (move)
+        bool moved = false;
+        switch (direction)
         {
             case 0:
-                if ((TyleType)maze[(int)PosY,(int)PosX-1]!=TyleType.Wall && (TyleType)maze[(int)PosY,(int)PosX-1]!=TyleType.Exit)
+                if ((TileType)maze[(int)PosY,(int)PosX-1]!=TileType.Wall && (TileType)maze[(int)PosY,(int)PosX-1]!=TileType.Exit)
                 {
                     PosX--;
+                    moved = true;
                 }
             break;
             case 1:
-            if((TyleType)maze[(int)PosY,(int)PosX+1]!=TyleType.Wall && (TyleType)maze[(int)PosY, (int)PosX + 1] != TyleType.Exit)
+            if((TileType)maze[(int)PosY,(int)PosX+1]!=TileType.Wall && (TileType)maze[(int)PosY, (int)PosX + 1] != TileType.Exit)
                 {
                     PosX++; 
+                    moved = true;
                 }
             break;
             case 2:
-            if((TyleType)maze[(int)PosY+1,(int)PosX]!=TyleType.Wall && (TyleType)maze[(int)PosY + 1, (int)PosX] != TyleType.Exit)
+            if((TileType)maze[(int)PosY+1,(int)PosX]!=TileType.Wall && (TileType)maze[(int)PosY + 1, (int)PosX] != TileType.Exit)
                 {
                     PosY++; 
+                    moved = true;
                 }
             break;
             case 3:
-            if((TyleType)maze[(int)PosY-1,(int)PosX]!=TyleType.Wall && (TyleType)maze[(int)PosY - 1, (int)PosX] != TyleType.Exit)
+            if((TileType)maze[(int)PosY-1,(int)PosX]!=TileType.Wall && (TileType)maze[(int)PosY - 1, (int)PosX] != TileType.Exit)
                 {
                     PosY--;
+                    moved = true;
                 }
             break;
             default:
             break;
             }
+            return moved;
     }
-    public virtual void Update(float dt)
+    public virtual void Update(double dt, int[,] maze)
     {
         
     }

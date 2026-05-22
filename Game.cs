@@ -1,17 +1,28 @@
 using System;
+using System.Diagnostics;
 
 namespace ProjectGame2526;
 
 class Game
 {
+    protected Stopwatch stopwatch;
     Maze maze = new Maze();
-    Player player = new Player(1,1,'@',ConsoleColor.Yellow);
-    Enemy enemy = new Enemy(1,1,6,15,'E',ConsoleColor.Red);
+    protected Player player;
+    protected Enemy enemy;
     //protected int width, height;
     //protected int playerPosX = 5, playerPosY = 5;
 
     public Game(/*int newWidth, int newHeight*/)
     {
+        maze.ChooseRandomMaze();
+        maze.Draw();
+
+        player = new Player(maze.PlayerSpawn[0],maze.PlayerSpawn[1],'@',ConsoleColor.Yellow);
+        enemy = new Enemy(1,maze.EnemySpawn[0],maze.EnemySpawn[1],'E',ConsoleColor.Red);
+
+        stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         /*
         // set the size
         width = newWidth;
@@ -22,16 +33,6 @@ class Game
         Console.WindowHeight = height + 1;
         */
     }
-
-    public int GetWidth()
-    {
-        return maze.Grid.GetLength(0);
-    }
-
-    public int GetHeight()
-    {
-        return maze.Grid.GetLength(1);
-    }
     public void DrawMaze()
     {
         maze.Draw();
@@ -40,7 +41,7 @@ class Game
     {
         player.Draw();
     }
-    public void MovePlayer()
+    public bool MovePlayer()
     {
         int direction;
         while (Console.KeyAvailable)
@@ -64,15 +65,21 @@ class Game
                 direction=4;
                 break;
             }
+            return player.Move(direction, maze.Grid);
             }
+            return false;
+    }
+    public void Update(double dt)
+    {
+        
     }
     public void DrawEnemy()
     {
         enemy.Draw();
     }
-    public void MoveEnemy()
+    public void MoveEnemy(double dt)
     {
-        enemy.Update();
+        enemy.Update(dt, maze.Grid);
     }
     /*
         public void Draw(float dt)
