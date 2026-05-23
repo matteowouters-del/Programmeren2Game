@@ -18,6 +18,10 @@ public class Maze
     protected int[] enemySpawn = new int[2];
     protected const int mazeWidth = 25;
     protected const int mazeHeight = 25;
+    protected int[] correctExit = new int[2];
+    protected Random rndGen = new Random();
+    protected List<int[]> possibleExits = new List<int[]>();
+
     public int[,] Grid
     {
         get { return grid; }
@@ -37,23 +41,34 @@ public class Maze
     {
         Grid = new int[mazeWidth, mazeHeight];
     }
+    public int[] CorrectExit
+    {
+        get { return correctExit; }
+        set { correctExit = value; }
+    }
+    public List<int[]> PossibleExits
+    {
+        get { return possibleExits; }
+        set { possibleExits = value; }
+    }
+
+
     public void ChooseRandomMaze()
     {
         string path = "Mazes"; //Name of folder with text files containing mazes
         string[] fileNames = Directory.GetFiles(path); // create array of filenames
 
-        Random rndGen = new Random();
         string chosenMaze = fileNames[rndGen.Next(0, fileNames.Length)]; //randomly select maze file
 
-        LoadMazeFromFile(chosenMaze);
+        LoadMazeFromFile(chosenMaze); //reads chosen .txt file and saves inside Grid[]
+        FindSpecialTiles(); //saves playerspawn, enemyspawn and exit tile locations
+        ChooseCorrectExit(); //randomly selects and saves random exit tile
     }
     public void LoadMazeFromFile(string mazePath)
     {
-        StreamReader reader = new StreamReader(mazePath);
+        StreamReader reader = new StreamReader(mazePath); //create streamreader inside folder with .txt files containing mazes
         try
         {
-            reader = new StreamReader(mazePath);
-
             for (int row = 0; row < mazeHeight; row++)
             {
                 string line = reader.ReadLine(); // stores a line from the .txt file into a string
@@ -76,6 +91,37 @@ public class Maze
         }
 
     }
+    public void FindSpecialTiles()
+    {
+        PossibleExits.Clear();
+
+        for (int row = 0; row < mazeHeight; row++)
+        {
+            for (int col = 0; col < mazeWidth; col++)
+            {
+                switch ((TileType)Grid[row, col])
+                {
+                    case TileType.PlayerSpawn:
+                        PlayerSpawn[0] = col; //saves playerspawn in 2D array
+                        PlayerSpawn[1] = row;
+                        break;
+
+                    case TileType.EnemySpawn:
+                        EnemySpawn[0] = col; //saves enemyspawn in 2D array
+                        EnemySpawn[1] = row;
+                        break;
+                    case TileType.Exit:
+                        PossibleExits.Add(new int[] { col, row }); //saves all exittiles in list of 2D arrays
+                        break;
+                }
+            }
+        }
+    }
+    public void ChooseCorrectExit() //randomly selects an exit tile from the list
+    {
+        int random = rndGen.Next(0, PossibleExits.Count);
+        CorrectExit = PossibleExits[random];
+    }
     public void Draw(int offsetX, int offsetY)
     {
         for (int row = 0; row < Grid.GetLength(0); row++)
@@ -96,22 +142,30 @@ public class Maze
                         break;
                     case TileType.Exit:
                         Console.SetCursorPosition(col + offsetX, row + offsetY);
-                        Console.ForegroundColor = ConsoleColor.Blue;
-                        Console.Write('X');
+                        bool isStillPossibleExit = PossibleExits.Any(exit => exit[0] == col && exit[1] == row);
+                        //Checks if the current exit tile is still in the list
+
+                        if (isStillPossibleExit)
+                        {
+                            Console.ForegroundColor = ConsoleColor.Blue;
+                            Console.Write('X');
+                        }
+                        else
+                        {
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            Console.Write('#');
+                        }
+
                         break;
                     case TileType.PlayerSpawn:
                         Console.SetCursorPosition(col + offsetX, row + offsetY);
                         Console.ForegroundColor = ConsoleColor.Black;
                         Console.Write(' ');
-                        PlayerSpawn[0] = col; //save the x location of the playerspawn
-                        PlayerSpawn[1] = row; // ""      y ""    ""      ""      ""
                         break;
                     case TileType.EnemySpawn:
                         Console.SetCursorPosition(col + offsetX, row + offsetY);
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(' ');
-                        EnemySpawn[0] = col;
-                        EnemySpawn[1] = row;
                         break;
                     case TileType.Collectible:
                         Console.SetCursorPosition(col + offsetX, row + offsetY);
@@ -123,17 +177,41 @@ public class Maze
             Console.WriteLine();
         }
     }
-    public bool CheckWall(int[,] map, int x, int y, int offsetX, int offsetY)
+    public bool CheckWall(int x, int y)
     {
-        bool result;
-        if ((TileType)map[y + offsetY, x + offsetX] == TileType.Wall || (TileType)map[y + offsetY, x + offsetX] == TileType.Exit)
+        bool result = false;
+        if ((TileType)Grid[y, x] == TileType.Wall || (TileType)Grid[y, x] == TileType.Exit)
         {
             result = true;
         }
-        else
+        return result;
+    }
+    public bool CheckWin(int x, int y)
+    {
+        bool result = false;
+        if (CorrectExit[0] == x && CorrectExit[1] == y) //checks whether or not the current playerposition is the correct exit
         {
-            result = false;
+            result = true;
         }
         return result;
+    }
+    public void RemoveWrongExit(int x, int y)
+    {
+        PossibleExits.RemoveAll(exit => exit[0] == x && exit[1] == y);
+    }
+    public void RemoveRandomExit(int amount) //removes certain amount of random items from list
+    {
+        for (int i = 0; i < amount && PossibleExits.Count > 1; i++)
+        {
+            int random = rndGen.Next(0, PossibleExits.Count);
+            if (PossibleExits[random][0] == CorrectExit[0] && PossibleExits[random][1] == CorrectExit[1]) //checks if randomly selected exit isn't the correct one
+            {
+                i--;
+            }
+            else
+            {
+                PossibleExits.RemoveAt(random); //removes random item from list
+            }
+        }
     }
 }
