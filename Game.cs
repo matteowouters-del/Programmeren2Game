@@ -22,7 +22,7 @@ class Game
         maze.ChooseRandomMaze();
         maze.Draw(uIOffsetX,uIOffsetY);
 
-        player = new Player(maze.PlayerSpawn[0],maze.PlayerSpawn[1],'@',ConsoleColor.Yellow, uIOffsetX, uIOffsetY);
+        player = new Player(1,maze.PlayerSpawn[0],maze.PlayerSpawn[1],'@',ConsoleColor.Yellow, uIOffsetX, uIOffsetY);
         enemy = new Enemy(1,maze.EnemySpawn[0],maze.EnemySpawn[1],'E',ConsoleColor.Red, uIOffsetX, uIOffsetY);
         
 
@@ -81,7 +81,7 @@ class Game
                 direction=4;
                 break;
             }
-            return player.Move(direction, maze.Grid);
+            return player.Move(direction, maze);
             }
             return false;
     }
@@ -91,7 +91,7 @@ class Game
     }
     public void MoveEnemy(double dt)
     {
-        enemy.Update(dt, maze.Grid);
+        enemy.Update(dt, maze);
     }
     /*
         public void Draw(float dt)
