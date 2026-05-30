@@ -9,7 +9,6 @@ public enum TileType
     Exit = 2,
     EnemySpawn = 3,
     PlayerSpawn = 4,
-    Collectible = 5
 }
 public class Maze
 {
@@ -50,6 +49,10 @@ public class Maze
     {
         get { return possibleExits; }
         set { possibleExits = value; }
+    }
+    public Random RndGen
+    {
+        get { return rndGen; }
     }
 
 
@@ -167,10 +170,7 @@ public class Maze
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(' ');
                         break;
-                    case TileType.Collectible:
-                        Console.SetCursorPosition(col + offsetX, row + offsetY);
-                        Console.ForegroundColor = ConsoleColor.Magenta;
-                        Console.Write('.');
+                        default:
                         break;
                 }
             }
@@ -213,5 +213,21 @@ public class Maze
                 PossibleExits.RemoveAt(random); //removes random item from list
             }
         }
+    }
+    public List<int[]> GetFreeTiles()
+    {
+        List<int[]> freeTiles = new List<int[]>();
+
+        for (int row = 0; row < mazeHeight; row++)
+        {
+            for (int col = 0; col < mazeWidth; col++)
+            {
+                if ((TileType)Grid[row, col] == TileType.Empty)
+                {
+                    freeTiles.Add(new int[] { col, row });
+                }
+            }
+        }
+        return freeTiles;
     }
 }
