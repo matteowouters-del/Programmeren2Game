@@ -24,6 +24,8 @@ public class Game
     protected int uIOffsetY = 5;
     protected GameState currentGameState;
     protected Menu mainMenu;
+    protected int scoreStartValue = 3000;
+    protected int currentDifficulty = 1;
     //protected int width, height;
     //protected int playerPosX = 5, playerPosY = 5;
 
@@ -130,7 +132,7 @@ public class Game
     {
         while (Console.KeyAvailable)
         {
-            ConsoleKeyInfo key = Console.ReadKey(true);
+            ConsoleKeyInfo key = Console.ReadKey();
 
             switch (currentGameState)
             {
@@ -164,20 +166,27 @@ public class Game
                     {
                         if (player.HasWon)
                         {
+                            stopwatch.Stop();
                             currentGameState = GameState.Won;
                             ResetScreen();
                         }
                         MoveEnemy(0);
                     }
+                    if (key.Key == ConsoleKey.W)
+                    {
+                        stopwatch.Stop();
+                        currentGameState = GameState.Won;
+                        ResetScreen();
+                    }
                     break;
 
                 case GameState.Won:
-                    if(key.Key == ConsoleKey.Enter)
+                    if (key.Key == ConsoleKey.Enter)
                     {
                         currentGameState = GameState.MainMenu;
                         ResetScreen();
                     }
-                break;
+                    break;
                 case GameState.Lost:
                     if (key.Key == ConsoleKey.Enter)
                     {
@@ -188,8 +197,42 @@ public class Game
             }
         }
     }
-    public void Update(double dt)
+    public void Update()
     {
+        if (currentGameState != GameState.Playing)
+        {
+            return;
+        }
+
+        int elapsedSeconds = (int)stopwatch.Elapsed.TotalSeconds;
+        uI.UpdateUIElementValue("Time", elapsedSeconds);
+
+        int score = scoreStartValue - elapsedSeconds * 10;
+        if (score < 0)
+        {
+            score = 0;
+        }
+        uI.UpdateUIElementValue("Score", score);
+
+        int difficulty = 1;
+
+        if (elapsedSeconds >= 90)
+        {
+            difficulty = 4;
+        }
+        else if (elapsedSeconds >= 60)
+        {
+            difficulty = 3;
+        }
+        else if (elapsedSeconds >= 30)
+        {
+            difficulty = 2;
+        }
+
+        currentDifficulty = difficulty;
+        uI.UpdateUIElementValue("Difficulty", currentDifficulty);
+
+        enemy.Speed = currentDifficulty;
     }
     public void MoveEnemy(double dt)
     {
@@ -205,13 +248,18 @@ public class Game
 
         uI = new UI();
         uITimer = new UIElement("Time", 0, 5, 1);
-        uIScore = new UIElement("Score", 3000, 15, 1);
+        uIScore = new UIElement("Score", scoreStartValue, 15, 1);
         uIDifficulty = new UIElement("Difficulty", 1, 30, 1);
+
+        uI.Add(uITimer);
         uI.Add(uIScore);
         uI.Add(uIDifficulty);
 
-        //stopwatch.Reset();
-        //stopwatch.Start();
+        currentDifficulty = 1;
+
+        stopwatch.Reset();
+        stopwatch.Start();
+
         ResetScreen();
         currentGameState = GameState.Playing;
     }
@@ -220,9 +268,9 @@ public class Game
         Console.SetCursorPosition(0, 0);
         Console.ForegroundColor = ConsoleColor.Black;
         Console.BackgroundColor = ConsoleColor.Black;
-        for (int i = 0; i < Console.WindowHeight-1; i++)
+        for (int i = 0; i < Console.WindowHeight - 1; i++)
         {
-            for (int j = 0; j < Console.WindowWidth-1; j++)
+            for (int j = 0; j < Console.WindowWidth - 1; j++)
             {
                 Console.Write(" ");
             }
