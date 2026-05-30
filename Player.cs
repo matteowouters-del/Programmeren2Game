@@ -3,9 +3,15 @@ namespace ProjectGame2526;
 public class Player : MovingSprite
 {
     protected bool hasWon = false;
+    protected int ghostCharges = 0;
+    public int GhostCharges
+    {
+        get { return ghostCharges; }
+        set { ghostCharges = value; }
+    }
     public bool HasWon
     {
-        get{return hasWon;}
+        get { return hasWon; }
     }
     public Player(int newspeed, int newPosX, int newPosY, char newSymbol, ConsoleColor newColor, int offsetX, int offsetY) : base(newspeed, newPosX, newPosY, newSymbol, newColor, offsetX, offsetY)
     {
@@ -34,16 +40,31 @@ public class Player : MovingSprite
                 return false;
         }
 
-        TileType tile = (TileType)maze.Grid[targetY, targetX];
+        int mazeHeight = maze.Grid.GetLength(0);
+        int mazeWidth = maze.Grid.GetLength(1);
 
-        if (tile == TileType.Wall)
+        if (targetX < 0 || targetX >= mazeWidth || targetY < 0 || targetY >= mazeHeight)
         {
             return false;
         }
 
-        if (tile == TileType.Exit) //check if target tile is exit
+        TileType tile = (TileType)maze.Grid[targetY, targetX];
+
+        if (tile == TileType.Wall)
         {
-            if (maze.CheckWin(targetX, targetY)) //check if exit is correct
+            if (ghostCharges > 0)
+            {
+                ghostCharges--;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        if (tile == TileType.Exit)
+        {
+            if (maze.CheckWin(targetX, targetY))
             {
                 PosX = targetX;
                 PosY = targetY;
@@ -52,7 +73,7 @@ public class Player : MovingSprite
             }
             else
             {
-                maze.RemoveWrongExit(targetX, targetY); //remove exit from list if wrong
+                maze.RemoveWrongExit(targetX, targetY);
                 return false;
             }
         }

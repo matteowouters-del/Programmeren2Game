@@ -24,8 +24,9 @@ public class Game
     protected int uIOffsetY = 5;
     protected GameState currentGameState;
     protected Menu mainMenu;
-    protected int scoreStartValue = 3000;
     protected int currentDifficulty = 1;
+    protected List<Collectible> collectibles;
+    protected int score;
     //protected int width, height;
     //protected int playerPosX = 5, playerPosY = 5;
 
@@ -90,6 +91,10 @@ public class Game
                 break;
             case GameState.Playing:
                 maze.Draw(uIOffsetX, uIOffsetY);
+                foreach (Collectible collectible in collectibles)
+                {
+                    collectible.Draw();
+                }
                 player.Draw();
                 enemy.Draw();
                 uI.Draw();
@@ -164,13 +169,17 @@ public class Game
                     bool playerMoved = MovePlayer(key);
                     if (playerMoved)
                     {
+                        CheckCollectibles();
                         if (player.HasWon)
                         {
                             stopwatch.Stop();
                             currentGameState = GameState.Won;
                             ResetScreen();
                         }
-                        MoveEnemy(0);
+                        else
+                        {
+                            MoveEnemy(0);
+                        }
                     }
                     if (key.Key == ConsoleKey.W)
                     {
@@ -207,12 +216,12 @@ public class Game
         int elapsedSeconds = (int)stopwatch.Elapsed.TotalSeconds;
         uI.UpdateUIElementValue("Time", elapsedSeconds);
 
-        int score = scoreStartValue - elapsedSeconds * 10;
-        if (score < 0)
+        int currentScore = score - elapsedSeconds * 10;
+        if (currentScore < 0)
         {
-            score = 0;
+            currentScore = 0;
         }
-        uI.UpdateUIElementValue("Score", score);
+        uI.UpdateUIElementValue("Score", currentScore);
 
         int difficulty = 1;
 
@@ -243,12 +252,19 @@ public class Game
         maze = new Maze();
         maze.ChooseRandomMaze();
 
+        collectibles = new List<Collectible>();
+        SpawnCollectibles(CollectibleType.Reveal, 15);
+        SpawnCollectibles(CollectibleType.Ghost, 2);
+        SpawnCollectibles(CollectibleType.Score, 8);
+
         player = new Player(1, maze.PlayerSpawn[0], maze.PlayerSpawn[1], '@', ConsoleColor.Yellow, uIOffsetX, uIOffsetY);
         enemy = new Enemy(1, maze.EnemySpawn[0], maze.EnemySpawn[1], 'E', ConsoleColor.Red, uIOffsetX, uIOffsetY);
 
+        score = 3000;
+
         uI = new UI();
         uITimer = new UIElement("Time", 0, 5, 1);
-        uIScore = new UIElement("Score", scoreStartValue, 15, 1);
+        uIScore = new UIElement("Score", score, 15, 1);
         uIDifficulty = new UIElement("Difficulty", 1, 30, 1);
 
         uI.Add(uITimer);
@@ -277,6 +293,58 @@ public class Game
             Console.WriteLine();
         }
         Console.SetCursorPosition(0, 0);
+    }
+    public void AddScore(int amount)
+    {
+        score += amount;
+        uI.UpdateUIElementValue("Score", score);
+    }
+    public void SpawnCollectibles(CollectibleType collectibleType, int amount)
+    {
+        List<int[]> freeTiles = maze.GetFreeTiles();
+
+        foreach (Collectible collectible in collectibles)
+        {
+            freeTiles.RemoveAll(tile => tile[0] == collectible.PosX && tile[1] == collectible.PosY);
+        }
+
+        for (int i = 0; i < amount && freeTiles.Count > 0; i++)
+        {
+            int randomIndex = maze.RndGen.Next(0, freeTiles.Count);
+            int[] tile = freeTiles[randomIndex];
+
+            collectibles.Add(CreateCollectible(collectibleType, tile[0], tile[1]));
+            freeTiles.RemoveAt(randomIndex);
+        }
+    }
+    public Collectible CreateCollectible(CollectibleType collectibleType, int x, int y)
+    {
+        switch (collectibleType)
+        {
+            case CollectibleType.Reveal:
+                return new RevealCollectible(x, y, uIOffsetX, uIOffsetY);
+            case CollectibleType.Score:
+                return new ScoreCollectible(x, y, uIOffsetX, uIOffsetY, 100);
+            case CollectibleType.Ghost:
+                return new GhostCollectible(x, y, uIOffsetX, uIOffsetY, 1);
+            default:
+                return null;
+        }
+    }
+    public void CheckCollectibles()
+    {
+        for (int i = collectibles.Count - 1; i >= 0; i--)
+        {
+            if (collectibles[i].IsOnPosition(player.PosX, player.PosY))
+            {
+                collectibles[i].Collect(this, maze, player, enemy);
+
+                if (collectibles[i].IsCollected)
+                {
+                    collectibles.RemoveAt(i);
+                }
+            }
+        }
     }
     /*
         public void Draw(float dt)
