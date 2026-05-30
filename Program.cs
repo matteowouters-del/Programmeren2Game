@@ -49,11 +49,10 @@ class Program
 
         while (game.CurrentGameState != GameState.Quit)
         {
-            double dt = stopwatch.Elapsed.TotalSeconds;
             
             game.Draw();
             game.Input();
-            game.Update(dt);
+            game.Update();
             
 
             Thread.Sleep(1000 / refreshRate);
