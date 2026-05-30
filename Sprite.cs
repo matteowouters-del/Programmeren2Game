@@ -1,5 +1,3 @@
-using System;
-
 namespace ProjectGame2526;
 
 public class Sprite

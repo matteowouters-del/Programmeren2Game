@@ -1,9 +1,12 @@
-using System;
-
 namespace ProjectGame2526;
 
 public class Player : MovingSprite
 {
+    protected bool hasWon = false;
+    public bool HasWon
+    {
+        get{return hasWon;}
+    }
     public Player(int newspeed, int newPosX, int newPosY, char newSymbol, ConsoleColor newColor, int offsetX, int offsetY) : base(newspeed, newPosX, newPosY, newSymbol, newColor, offsetX, offsetY)
     {
 
@@ -44,6 +47,7 @@ public class Player : MovingSprite
             {
                 PosX = targetX;
                 PosY = targetY;
+                hasWon = true;
                 return true;
             }
             else

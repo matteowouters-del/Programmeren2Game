@@ -30,7 +30,7 @@ public class UI
             if(uIElements[i].Name == elementName) 
             {
                 uIElements[i].ElementValue = newValue;
-                updated = true; //om niet verder in de lijst te zoeken eens gevonden
+                updated = true;
             }
         }
     }

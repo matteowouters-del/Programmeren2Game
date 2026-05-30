@@ -1,6 +1,3 @@
-using System;
-using System.Security.Cryptography.X509Certificates;
-
 namespace ProjectGame2526;
 
 public class Enemy : MovingSprite
@@ -12,7 +9,6 @@ public class Enemy : MovingSprite
     }
     public override void Update(double dt, Maze maze)
     {
-
         for (int i = 0; i < speed; i++)
         {
             bool moved = false;
