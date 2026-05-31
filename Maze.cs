@@ -20,6 +20,12 @@ public class Maze
     protected int[] correctExit = new int[2];
     protected Random rndGen = new Random();
     protected List<int[]> possibleExits = new List<int[]>();
+    protected List<int[]> changedTiles = new List<int[]>();
+
+    public List<int[]> ChangedTiles
+    {
+        get { return changedTiles; }
+    }
 
     public int[,] Grid
     {
@@ -170,7 +176,7 @@ public class Maze
                         Console.ForegroundColor = ConsoleColor.Red;
                         Console.Write(' ');
                         break;
-                        default:
+                    default:
                         break;
                 }
             }
@@ -197,20 +203,30 @@ public class Maze
     }
     public void RemoveWrongExit(int x, int y)
     {
-        PossibleExits.RemoveAll(exit => exit[0] == x && exit[1] == y);
+        int removed = PossibleExits.RemoveAll(exit => exit[0] == x && exit[1] == y);
+
+        if (removed > 0)
+        {
+            AddChangedTile(x, y);
+        }
     }
-    public void RemoveRandomExit(int amount) //removes certain amount of random items from list
+    public void RemoveRandomExit(int amount)
     {
         for (int i = 0; i < amount && PossibleExits.Count > 1; i++)
         {
             int random = rndGen.Next(0, PossibleExits.Count);
-            if (PossibleExits[random][0] == CorrectExit[0] && PossibleExits[random][1] == CorrectExit[1]) //checks if randomly selected exit isn't the correct one
+
+            if (PossibleExits[random][0] == CorrectExit[0] && PossibleExits[random][1] == CorrectExit[1])
             {
                 i--;
             }
             else
             {
-                PossibleExits.RemoveAt(random); //removes random item from list
+                int x = PossibleExits[random][0];
+                int y = PossibleExits[random][1];
+
+                PossibleExits.RemoveAt(random);
+                AddChangedTile(x, y);
             }
         }
     }
@@ -229,5 +245,52 @@ public class Maze
             }
         }
         return freeTiles;
+    }
+    public void DrawTile(int x, int y, int offsetX, int offsetY)
+    {
+        Console.SetCursorPosition(x + offsetX, y + offsetY);
+
+        switch ((TileType)Grid[y, x])
+        {
+            case TileType.Empty:
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write(' ');
+                break;
+
+            case TileType.Wall:
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.Write('#');
+                break;
+
+            case TileType.Exit:
+                bool isStillPossibleExit = PossibleExits.Any(exit => exit[0] == x && exit[1] == y);
+
+                if (isStillPossibleExit)
+                {
+                    Console.ForegroundColor = ConsoleColor.Blue;
+                    Console.Write('X');
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.Write('#');
+                }
+                break;
+
+            case TileType.PlayerSpawn:
+            case TileType.EnemySpawn:
+                Console.ForegroundColor = ConsoleColor.Black;
+                Console.Write(' ');
+                break;
+        }
+    }
+    public void AddChangedTile(int x, int y)
+    {
+        bool alreadyInList = changedTiles.Any(tile => tile[0] == x && tile[1] == y);
+
+        if (!alreadyInList)
+        {
+            changedTiles.Add(new int[] { x, y });
+        }
     }
 }

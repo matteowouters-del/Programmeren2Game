@@ -1,8 +1,11 @@
+using System.Diagnostics.CodeAnalysis;
+
 namespace ProjectGame2526;
 
 public class UI
 {
     protected List<UIElement> uIElements;
+    protected ConsoleColor color = ConsoleColor.Red;
 
     public UI()
     {
@@ -16,6 +19,7 @@ public class UI
 
     public void Draw()
     {
+        Console.ForegroundColor = color;
         foreach (UIElement element in uIElements)
         {
             element.Draw();

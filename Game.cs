@@ -27,6 +27,7 @@ public class Game
     protected int currentDifficulty = 1;
     protected List<Collectible> collectibles;
     protected int score;
+    protected int lastUiSecond = -1;
     //protected int width, height;
     //protected int playerPosX = 5, playerPosY = 5;
 
@@ -166,10 +167,27 @@ public class Game
                     break;
 
                 case GameState.Playing:
+                    int oldPlayerX = player.PosX;
+                    int oldPlayerY = player.PosY;
+
                     bool playerMoved = MovePlayer(key);
+
+                    RedrawChangedMazeTiles();
+
                     if (playerMoved)
                     {
+                        RedrawMazeAt(oldPlayerX, oldPlayerY);
+                        player.Draw();
+
+                        CheckEnemyHit();
+                        if (currentGameState == GameState.Lost)
+                        {
+                            break;
+                        }
+
                         CheckCollectibles();
+                        RedrawChangedMazeTiles();
+
                         if (player.HasWon)
                         {
                             stopwatch.Stop();
@@ -181,6 +199,7 @@ public class Game
                             MoveEnemy(0);
                         }
                     }
+
                     if (key.Key == ConsoleKey.W)
                     {
                         stopwatch.Stop();
@@ -214,6 +233,12 @@ public class Game
         }
 
         int elapsedSeconds = (int)stopwatch.Elapsed.TotalSeconds;
+
+        if (elapsedSeconds != lastUiSecond)
+        {
+            uI.Draw();
+            lastUiSecond = elapsedSeconds;
+        }
         uI.UpdateUIElementValue("Time", elapsedSeconds);
 
         int currentScore = score - elapsedSeconds * 10;
@@ -245,7 +270,24 @@ public class Game
     }
     public void MoveEnemy(double dt)
     {
-        enemy.Update(dt, maze);
+        for (int i = 0; i < enemy.Speed; i++)
+        {
+            int oldEnemyX = enemy.PosX;
+            int oldEnemyY = enemy.PosY;
+
+            enemy.MoveRandomStep(maze);
+
+            RedrawMazeAt(oldEnemyX, oldEnemyY);
+            enemy.Draw();
+
+            CheckEnemyHit();
+            if (currentGameState == GameState.Lost)
+            {
+                return;
+            }
+
+            Thread.Sleep(150 / enemy.Speed);
+        }
     }
     public void StartNewGame()
     {
@@ -278,6 +320,7 @@ public class Game
 
         ResetScreen();
         currentGameState = GameState.Playing;
+        DrawStaticPlayingScreen();
     }
     public void ResetScreen()
     {
@@ -345,6 +388,43 @@ public class Game
                 }
             }
         }
+    }
+    public void DrawStaticPlayingScreen()
+    {
+        maze.Draw(uIOffsetX, uIOffsetY);
+
+        foreach (Collectible collectible in collectibles)
+        {
+            collectible.Draw();
+        }
+
+        player.Draw();
+        enemy.Draw();
+        uI.Draw();
+    }
+    public void RedrawMazeAt(int x, int y)
+    {
+        maze.DrawTile(x, y, uIOffsetX, uIOffsetY);
+    }
+    public void CheckEnemyHit()
+    {
+        if (player.PosX == enemy.PosX && player.PosY == enemy.PosY)
+        {
+            stopwatch.Stop();
+            currentGameState = GameState.Lost;
+            ResetScreen();
+        }
+    }
+    public void RedrawChangedMazeTiles()
+    {
+        for (int i = 0; i < maze.ChangedTiles.Count; i++)
+        {
+            int x = maze.ChangedTiles[i][0];
+            int y = maze.ChangedTiles[i][1];
+            RedrawMazeAt(x, y);
+        }
+
+        maze.ChangedTiles.Clear();
     }
     /*
         public void Draw(float dt)
