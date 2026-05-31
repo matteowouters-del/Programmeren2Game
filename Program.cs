@@ -49,25 +49,27 @@ class Program
 
         while (game.CurrentGameState != GameState.Quit)
         {
-            
-            game.Draw();
+            if (game.CurrentGameState != GameState.Playing)
+            {
+                game.Draw();
+            }
+
             game.Input();
             game.Update();
-            
 
             Thread.Sleep(1000 / refreshRate);
-            //game.Update(dt);
-            /*bool playerMoved = game.MovePlayer();
-            if (playerMoved)
-            {
-              game.MoveEnemy(dt);  
-            }
-            Thread.Sleep(1000 / refreshRate);
-
-
-            Reset(game);
-            game.Draw();*/
         }
+        //game.Update(dt);
+        /*bool playerMoved = game.MovePlayer();
+        if (playerMoved)
+        {
+          game.MoveEnemy(dt);  
+        }
+        Thread.Sleep(1000 / refreshRate);
+
+
+        Reset(game);
+        game.Draw();*/
     }
 
 

@@ -19,6 +19,7 @@ public class Player : MovingSprite
     }
     public override bool Move(int direction, Maze maze)
     {
+
         int targetX = PosX;
         int targetY = PosY;
 
