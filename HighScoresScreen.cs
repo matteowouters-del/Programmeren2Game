@@ -9,6 +9,11 @@ public class HighscoresScreen : Screen
     {
     }
 
+    public static int CompareHighscores(HighscoreEntry a, HighscoreEntry b)
+    {
+        return a.Score.CompareTo(b.Score);
+    }
+
     public override void Draw()
     {
         base.Draw();
@@ -25,7 +30,6 @@ public class HighscoresScreen : Screen
         }
         else
         {
-            // draws up to 5 highscores under the txt screen
             for (int i = 0; i < highscores.Count && i < 5; i++)
             {
                 Console.SetCursorPosition(10, startY + i);
@@ -57,12 +61,10 @@ public class HighscoresScreen : Screen
                 highscores = new List<HighscoreEntry>();
             }
 
-            // sorts scores from highest to lowest
-            highscores.Sort(delegate (HighscoreEntry a, HighscoreEntry b)
-            {
-                return a.Score.CompareTo(b.Score);
-            });
+            // sorts highscores from low to high
+            highscores.Sort(CompareHighscores);
 
+            // reverses the list so the highest score comes first
             highscores.Reverse();
         }
         catch (Exception)

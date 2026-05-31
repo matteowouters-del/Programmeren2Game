@@ -151,8 +151,17 @@ public class Maze
                         break;
                     case TileType.Exit:
                         Console.SetCursorPosition(col + offsetX, row + offsetY);
-                        bool isStillPossibleExit = PossibleExits.Any(exit => exit[0] == col && exit[1] == row);
-                        //Checks if the current exit tile is still in the list
+
+                        bool isStillPossibleExit = false;
+
+                        foreach (int[] exit in PossibleExits)
+                        {
+                            if (exit[0] == col && exit[1] == row)
+                            {
+                                isStillPossibleExit = true;
+                                break;
+                            }
+                        }
 
                         if (isStillPossibleExit)
                         {
@@ -203,7 +212,16 @@ public class Maze
     }
     public void RemoveWrongExit(int x, int y)
     {
-        int removed = PossibleExits.RemoveAll(exit => exit[0] == x && exit[1] == y);
+        int removed = 0;
+
+        for (int i = PossibleExits.Count - 1; i >= 0; i--)
+        {
+            if (PossibleExits[i][0] == x && PossibleExits[i][1] == y)
+            {
+                PossibleExits.RemoveAt(i);
+                removed++;
+            }
+        }
 
         if (removed > 0)
         {
@@ -263,7 +281,15 @@ public class Maze
                 break;
 
             case TileType.Exit:
-                bool isStillPossibleExit = PossibleExits.Any(exit => exit[0] == x && exit[1] == y);
+                bool isStillPossibleExit = false;
+
+                foreach (int[] exit in PossibleExits)
+                {
+                    if (exit[0] == x && exit[1] == y)
+                    {
+                        isStillPossibleExit = true;
+                    }
+                }
 
                 if (isStillPossibleExit)
                 {
@@ -286,7 +312,16 @@ public class Maze
     }
     public void AddChangedTile(int x, int y)
     {
-        bool alreadyInList = changedTiles.Any(tile => tile[0] == x && tile[1] == y);
+        bool alreadyInList = false;
+
+        foreach (int[] tile in changedTiles)
+        {
+            if (tile[0] == x && tile[1] == y)
+            {
+                alreadyInList = true;
+                break;
+            }
+        }
 
         if (!alreadyInList)
         {

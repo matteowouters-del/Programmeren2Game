@@ -65,6 +65,11 @@ public class Game
         mainMenu.AddMenuItem(new MenuItem("Exit", GameState.Quit));
     }
 
+    public static int CompareHighscores(HighscoreEntry a, HighscoreEntry b)
+    {
+        return a.Score.CompareTo(b.Score);
+    }
+
     public void Draw()
     {
         switch (currentGameState)
@@ -497,10 +502,7 @@ public class Game
             highscores.Add(new HighscoreEntry(currentPlayerName, GetFinalScore()));
 
             // sorts the list from highest to lowest score
-            highscores.Sort(delegate (HighscoreEntry a, HighscoreEntry b)
-            {
-                return a.Score.CompareTo(b.Score);
-            });
+            highscores.Sort(CompareHighscores);
 
             highscores.Reverse();
 
@@ -541,7 +543,13 @@ public class Game
         // removes tiles that already contain another collectible
         foreach (Collectible collectible in collectibles)
         {
-            freeTiles.RemoveAll(tile => tile[0] == collectible.PosX && tile[1] == collectible.PosY);
+            for (int i = freeTiles.Count - 1; i >= 0; i--)
+            {
+                if (freeTiles[i][0] == collectible.PosX && freeTiles[i][1] == collectible.PosY)
+                {
+                    freeTiles.RemoveAt(i);
+                }
+            }
         }
 
         // randomly places the requested amount of collectibles
@@ -631,6 +639,7 @@ public class Game
 
         maze.ChangedTiles.Clear();
     }
+
     public void RedrawTileContents(int x, int y)
     {
         maze.DrawTile(x, y, uIOffsetX, uIOffsetY);
