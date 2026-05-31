@@ -13,14 +13,11 @@ public class Enemy : MovingSprite
     {
         bool moved = false;
 
+        // keeps trying random directions until one works
         while (!moved)
         {
             int direction = rndGen.Next(0, 4);
             moved = Move(direction, maze);
         }
-    }
-
-    public override void Update(double dt, Maze maze)
-    {
     }
 }

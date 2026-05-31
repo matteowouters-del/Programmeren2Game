@@ -6,11 +6,13 @@ public class UIElement
     protected string name;
     protected int posX;
     protected int posY;
+
     public int ElementValue
     {
         get { return elementValue; }
         set { elementValue = value; }
     }
+
     public string Name
     {
         get { return name; }
@@ -22,6 +24,7 @@ public class UIElement
         get { return posX; }
         set { posX = value; }
     }
+
     public int PosY
     {
         get { return posY; }
@@ -38,7 +41,8 @@ public class UIElement
 
     public void Draw()
     {
+        // draws one UI label and its current value
         Console.SetCursorPosition(PosX, PosY);
-        Console.Write(name + ": " + elementValue);  
+        Console.Write(name + ": " + elementValue);
     }
 }

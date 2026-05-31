@@ -6,6 +6,7 @@ public enum CollectibleType
     Score,
     Ghost
 }
+
 public class Collectible
 {
     protected int posX;
@@ -20,10 +21,12 @@ public class Collectible
     {
         get { return posX; }
     }
+
     public int PosY
     {
         get { return posY; }
     }
+
     public bool IsCollected
     {
         get { return isCollected; }
@@ -59,6 +62,7 @@ public class Collectible
     {
         if (!isCollected)
         {
+            // marks collectible as taken before applying its effect
             isCollected = true;
             ApplyEffect(game, maze, player, enemy);
         }
@@ -66,6 +70,5 @@ public class Collectible
 
     public virtual void ApplyEffect(Game game, Maze maze, Player player, Enemy enemy)
     {
-        
     }
 }

@@ -1,20 +1,18 @@
 namespace ProjectGame2526;
 
-
 public class GhostCollectible : Collectible
 {
     protected int amount;
 
-
     public GhostCollectible(int newPosX, int newPosY, int newOffsetX, int newOffsetY, int newAmount)
-        : base(newPosX, newPosY, 'G', ConsoleColor.Cyan, newOffsetX, newOffsetY)
+        : base(newPosX, newPosY, '°', ConsoleColor.White, newOffsetX, newOffsetY)
     {
         amount = newAmount;
     }
 
-
     public override void ApplyEffect(Game game, Maze maze, Player player, Enemy enemy)
     {
+        // gives the player one extra wall pass
         player.GhostCharges += amount;
     }
 }
