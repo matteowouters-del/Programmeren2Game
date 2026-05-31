@@ -53,7 +53,7 @@ public class Collectible
         }
     }
 
-    public bool IsOnPosition(int x, int y)
+    public bool CheckPosition(int x, int y)
     {
         return !isCollected && posX == x && posY == y;
     }

@@ -575,7 +575,7 @@ public class Game
         // loops backwards so collected items can be removed safely
         for (int i = collectibles.Count - 1; i >= 0; i--)
         {
-            if (collectibles[i].IsOnPosition(player.PosX, player.PosY))
+            if (collectibles[i].CheckPosition(player.PosX, player.PosY))
             {
                 collectibles[i].Collect(this, maze, player, enemy);
 

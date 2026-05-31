@@ -18,7 +18,7 @@ public class Screen
     {
         get
         {
-            if (string.IsNullOrEmpty(text))
+            if (text == null)
             {
                 return 0;
             }
