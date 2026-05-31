@@ -2,8 +2,20 @@ namespace ProjectGame2526;
 
 public class HighscoreEntry
 {
-    public string Name { get; set; }
-    public int Score { get; set; }
+    protected string name;
+    protected int score;
+
+    public string Name
+    {
+        get { return name; }
+        set { name = value; }
+    }
+
+    public int Score
+    {
+        get { return score; }
+        set { score = value; }
+    }
 
     public HighscoreEntry()
     {
