@@ -1,5 +1,3 @@
-using System.Diagnostics.CodeAnalysis;
-
 namespace ProjectGame2526;
 
 public class UI
@@ -9,7 +7,7 @@ public class UI
 
     public UI()
     {
-       uIElements = new List<UIElement>();
+        uIElements = new List<UIElement>();
     }
 
     public void Add(UIElement element)
@@ -20,6 +18,7 @@ public class UI
     public void Draw()
     {
         Console.ForegroundColor = color;
+
         foreach (UIElement element in uIElements)
         {
             element.Draw();
@@ -29,9 +28,11 @@ public class UI
     public void UpdateUIElementValue(string elementName, int newValue)
     {
         bool updated = false;
-        for(int i = 0; i < uIElements.Count && !updated; i++)
+
+        // searches for the correct UI element by name
+        for (int i = 0; i < uIElements.Count && !updated; i++)
         {
-            if(uIElements[i].Name == elementName) 
+            if (uIElements[i].Name == elementName)
             {
                 uIElements[i].ElementValue = newValue;
                 updated = true;

@@ -4,27 +4,35 @@ public class MenuItem
 {
     protected string name;
     protected GameState targetState;
+
     public string Name
     {
-        get{return name;}
-        set{name = value;}
+        get { return name; }
+        set { name = value; }
     }
+
     public GameState TargetState
     {
-        get{return targetState;}
-        set{targetState = value;}
+        get { return targetState; }
+        set { targetState = value; }
     }
+
     public MenuItem(string newName, GameState newTargetState)
     {
         Name = newName;
         targetState = newTargetState;
     }
+
     public void Activate(Game game)
     {
-        if(TargetState == GameState.Playing)
+        // starting a game also resets all gameplay objects
+        if (TargetState == GameState.Playing)
         {
             game.StartNewGame();
         }
-        game.CurrentGameState = targetState;
+        else
+        {
+            game.CurrentGameState = targetState;
+        }
     }
 }
