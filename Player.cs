@@ -4,6 +4,8 @@ public class Player : MovingSprite
 {
     protected bool hasWon = false;
     protected int ghostCharges = 0;
+    protected ConsoleColor ghostColor;
+    protected ConsoleColor playerColor;
 
     public int GhostCharges
     {
@@ -16,9 +18,11 @@ public class Player : MovingSprite
         get { return hasWon; }
     }
 
-    public Player(int newspeed, int newPosX, int newPosY, char newSymbol, ConsoleColor newColor, int offsetX, int offsetY)
+    public Player(int newspeed, int newPosX, int newPosY, char newSymbol, ConsoleColor newColor, int offsetX, int offsetY, ConsoleColor newGhostColor)
         : base(newspeed, newPosX, newPosY, newSymbol, newColor, offsetX, offsetY)
     {
+        playerColor = color;
+        ghostColor = newGhostColor;
     }
 
     public override bool Move(int direction, Maze maze)
@@ -88,5 +92,17 @@ public class Player : MovingSprite
         PosX = targetX;
         PosY = targetY;
         return true;
+    }
+    public override void Draw()
+    {
+        if (GhostCharges > 0)
+        {
+            color = ghostColor;
+        }
+        else
+        {
+            color = playerColor;
+        }
+        base.Draw();
     }
 }

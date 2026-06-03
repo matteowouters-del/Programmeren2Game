@@ -55,7 +55,7 @@ public class Sprite
         OffsetY = newOffsetY;
     }
 
-    public void Draw()
+    public virtual void Draw()
     {
         // draws the sprite at its maze position plus the screen offset
         Console.SetCursorPosition(posX + OffsetX, posY + OffsetY);

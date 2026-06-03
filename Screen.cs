@@ -52,7 +52,7 @@ public class Screen
         }
     }
 
-    public Screen(string filepath, ConsoleColor newForegroundColor, ConsoleColor newBackgroundColor)
+    /*public Screen(string filepath, ConsoleColor newForegroundColor, ConsoleColor newBackgroundColor)
     {
         foregroundColor = newForegroundColor;
         backgroundColor = newBackgroundColor;
@@ -74,7 +74,7 @@ public class Screen
                 streamReader.Close();
             }
         }
-    }
+    }*/
 
     public virtual void Draw()
     {

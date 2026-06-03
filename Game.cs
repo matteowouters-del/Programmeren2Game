@@ -58,7 +58,7 @@ public class Game
         scoreSaved = false;
 
         // creates the main menu with all options
-        mainMenu = new Menu("MainMenuScreen.txt", ConsoleColor.DarkGreen, ConsoleColor.Black, ConsoleColor.White, ConsoleColor.DarkYellow);
+        mainMenu = new Menu("MainMenuScreen.txt", ConsoleColor.White, ConsoleColor.DarkYellow);
         mainMenu.AddMenuItem(new MenuItem("Start game", GameState.Playing));
         mainMenu.AddMenuItem(new MenuItem("HighScores", GameState.HighScores));
         mainMenu.AddMenuItem(new MenuItem("Rules", GameState.Rules));
@@ -92,6 +92,7 @@ public class Game
                 }
 
                 player.Draw();
+
                 enemy.Draw();
                 uI.Draw();
                 break;
@@ -403,7 +404,7 @@ public class Game
         SpawnCollectibles(CollectibleType.Score, 8);
 
         // resets player and enemy positions
-        player = new Player(1, maze.PlayerSpawn[0], maze.PlayerSpawn[1], '@', ConsoleColor.Yellow, uIOffsetX, uIOffsetY);
+        player = new Player(1, maze.PlayerSpawn[0], maze.PlayerSpawn[1], '@', ConsoleColor.DarkYellow, uIOffsetX, uIOffsetY, ConsoleColor.White);
         enemy = new Enemy(1, maze.EnemySpawn[0], maze.EnemySpawn[1], 'E', ConsoleColor.Red, uIOffsetX, uIOffsetY);
 
         score = 3000;
@@ -604,7 +605,7 @@ public class Game
         {
             collectible.Draw();
         }
-
+        
         player.Draw();
         enemy.Draw();
         uI.Draw();
