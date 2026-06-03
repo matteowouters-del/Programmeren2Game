@@ -14,5 +14,7 @@ public class GhostCollectible : Collectible
     {
         // gives the player one extra wall pass
         player.GhostCharges += amount;
+        //Draw player with ghostcolor
+        player.Draw();
     }
 }

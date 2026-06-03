@@ -5,7 +5,7 @@ public class ScoreCollectible : Collectible
     protected int amount;
 
     public ScoreCollectible(int newPosX, int newPosY, int newOffsetX, int newOffsetY, int newAmount)
-        : base(newPosX, newPosY, '$', ConsoleColor.DarkYellow, newOffsetX, newOffsetY)
+        : base(newPosX, newPosY, '$', ConsoleColor.Yellow, newOffsetX, newOffsetY)
     {
         amount = newAmount;
     }

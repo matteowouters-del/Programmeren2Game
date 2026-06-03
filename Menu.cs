@@ -16,12 +16,7 @@ public class Menu : Screen
         activeItemBackgroundColor = ConsoleColor.White;
     }
 
-    public Menu(string filepath,
-                ConsoleColor foregroundColor,
-                ConsoleColor backgroundColor,
-                ConsoleColor newActiveItemForegroundColor,
-                ConsoleColor newActiveItemBackgroundColor)
-    : base(filepath, foregroundColor, backgroundColor)
+    public Menu(string filepath, ConsoleColor newActiveItemForegroundColor, ConsoleColor newActiveItemBackgroundColor) : base(filepath)
     {
         menuItems = new List<MenuItem>();
         activeMenuItemID = 0;
