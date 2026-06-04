@@ -52,30 +52,6 @@ public class Screen
         }
     }
 
-    /*public Screen(string filepath, ConsoleColor newForegroundColor, ConsoleColor newBackgroundColor)
-    {
-        foregroundColor = newForegroundColor;
-        backgroundColor = newBackgroundColor;
-        StreamReader streamReader = null;
-
-        try
-        {
-            streamReader = new StreamReader(filepath);
-            text = streamReader.ReadToEnd();
-        }
-        catch (Exception)
-        {
-            text = "Screen file not found.";
-        }
-        finally
-        {
-            if (streamReader != null)
-            {
-                streamReader.Close();
-            }
-        }
-    }*/
-
     public virtual void Draw()
     {
         // draws the full contents of the text file to the screen

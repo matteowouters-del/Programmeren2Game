@@ -58,17 +58,17 @@ public class Collectible
         return !isCollected && posX == x && posY == y;
     }
 
-    public void Collect(Game game, Maze maze, Player player, Enemy enemy)
+    public void Collect(Game game, Maze maze, Player player)
     {
         if (!isCollected)
         {
             // marks collectible as taken before applying its effect
             isCollected = true;
-            ApplyEffect(game, maze, player, enemy);
+            ApplyEffect(game, maze, player);
         }
     }
 
-    public virtual void ApplyEffect(Game game, Maze maze, Player player, Enemy enemy)
+    public virtual void ApplyEffect(Game game, Maze maze, Player player)
     {
     }
 }

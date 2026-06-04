@@ -338,24 +338,25 @@ public class Game
             currentScore = 0;
         }
         uI.UpdateUIElementValue("Score", currentScore);
-
-        int difficulty = 1;
-
+        
         // increases difficulty based on time survived
         if (elapsedSeconds >= 90)
         {
-            difficulty = 4;
+            currentDifficulty = 4;
         }
         else if (elapsedSeconds >= 60)
         {
-            difficulty = 3;
+            currentDifficulty = 3;
         }
         else if (elapsedSeconds >= 30)
         {
-            difficulty = 2;
+            currentDifficulty = 2;
+        }
+        else
+        {
+            currentDifficulty = 1;
         }
 
-        currentDifficulty = difficulty;
         uI.UpdateUIElementValue("Difficulty", currentDifficulty);
         enemy.Speed = currentDifficulty;
 
@@ -586,7 +587,8 @@ public class Game
         {
             if (collectibles[i].CheckPosition(player.PosX, player.PosY))
             {
-                collectibles[i].Collect(this, maze, player, enemy);
+                collectibles[i].Collect(this, maze, player);
+                uI.Draw(); // update UI incase score increases
 
                 if (collectibles[i].IsCollected)
                 {
