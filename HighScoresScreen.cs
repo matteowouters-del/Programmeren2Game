@@ -11,6 +11,7 @@ public class HighscoresScreen : Screen
 
     public static int CompareHighscores(HighscoreEntry a, HighscoreEntry b)
     {
+        //AI suggestion to sort highscoreEntries by score
         return a.Score.CompareTo(b.Score);
     }
 
@@ -26,19 +27,19 @@ public class HighscoresScreen : Screen
         if (highscores.Count == 0)
         {
             Console.SetCursorPosition(10, startY);
-            Console.WriteLine("No highscores yet                 ");
+            Console.WriteLine("No highscores yet");
         }
         else
         {
             for (int i = 0; i < highscores.Count && i < 5; i++)
             {
                 Console.SetCursorPosition(10, startY + i);
-                Console.WriteLine((i + 1) + ". " + highscores[i].Name + " - " + highscores[i].Score + "                 ");
+                Console.WriteLine((i + 1) + ". " + highscores[i].Name + " - " + highscores[i].Score);
             }
         }
 
         Console.SetCursorPosition(10, startY + 7);
-        Console.WriteLine("Press Enter to return            ");
+        Console.WriteLine("Press Enter to return");
     }
 
     public List<HighscoreEntry> LoadHighscores()

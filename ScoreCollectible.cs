@@ -10,7 +10,7 @@ public class ScoreCollectible : Collectible
         amount = newAmount;
     }
 
-    public override void ApplyEffect(Game game, Maze maze, Player player, Enemy enemy)
+    public override void ApplyEffect(Game game, Maze maze, Player player)
     {
         // gives the player extra score
         game.AddScore(amount);

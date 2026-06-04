@@ -9,7 +9,7 @@ public class RevealCollectible : Collectible
     {
     }
 
-    public override void ApplyEffect(Game game, Maze maze, Player player, Enemy enemy)
+    public override void ApplyEffect(Game game, Maze maze, Player player)
     {
         // removes a number of wrong exits from the maze
         maze.RemoveRandomExit(amount);
